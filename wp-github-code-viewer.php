@@ -15,23 +15,23 @@ include_once( 'geshi/geshi.php' );
 class WP_Github_Code_Viewer {
 
   // init plugin.
-	function init() {
-		add_shortcode('gcv', array(__CLASS__, '_add_shortcode'));
-	}
+  function init() {
+    add_shortcode('gcv', array(__CLASS__, '_add_shortcode'));
+  }
 
   // add_shortcode
-	public function _add_shortcode($atts, $content = null) {
-		if (array_key_exists('url', $atts)) {
-			$url = $atts['url'];			
-		} else {
-			return self::getErrorFullMessage('did not find paramater <i>url</i>.');
-		}
+  public function _add_shortcode($atts, $content = null) {
+    if (array_key_exists('url', $atts)) {
+      $url = $atts['url'];
+    } else {
+      return self::getErrorFullMessage('did not find paramater <i>url</i>.');
+    }
     
     if (array_key_exists('lang', $atts)) {
-			$language = $atts['lang'];			
-		} else {
-			return self::getErrorFullMessage('did not find paramater <i>lang</i>.');
-		}		
+      $language = $atts['lang'];
+    } else {
+      return self::getErrorFullMessage('did not find paramater <i>lang</i>.');
+    }
     
     // get raw file from github
     $source = file_get_contents($url . '?raw=true');
@@ -46,7 +46,7 @@ class WP_Github_Code_Viewer {
     
     // parse code
     return $geshi->parse_code();    
-	}
+  }
   
   // Return usage
   private function usage()
