@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP_Github_Code_Viewer
-Version: 1.0
+Version: 1.1
 Plugin URI: https://github.com/cousiano/wp-github-code-viewer
 Description: Display raw file from github and display it using geshi syntax highliter. Usage [gcv url='myGithubUrl' lang='geshiLang']
 Author: Marc Rabahi <marc.rabahi@gmail.com>
@@ -34,7 +34,9 @@ class WP_Github_Code_Viewer {
     }
     
     // get raw file from github
-    $source = file_get_contents($url . '?raw=true');
+    $rawUrlP1=str_replace("blob/","",$url);
+    $rawUrl=str_replace("github.com","raw.githubusercontent.com",$rawUrlP1);
+    $source = curl_file_get_contents($rawUrl);
     
     // instanciate geshi
     $geshi = new GeSHi($source, $language);
@@ -61,7 +63,41 @@ class WP_Github_Code_Viewer {
   private function getErrorFullMessage($errorMessage)
   {
     return "<b><font color='red'>$errorMessage</font></b><br><br>".self::usage();
+  }  
+}
+
+function curl_file_get_contents($url) {   
+  // init session:
+  $ch = curl_init();
+  
+  // configure options:        
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+  curl_setopt($ch, CURLOPT_HEADER, false);    
+  curl_setopt($ch, CURLOPT_SSLVERSION,3);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);
+  
+  $header = array(
+      'Connection: keep-alive',
+      'User-Agent: Mozilla/5.0',
+  );
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+  
+  // execute session:
+  $content = curl_exec($ch);
+  $error = curl_error($ch);
+  
+  // close resource:
+  curl_close($ch);    
+
+  // check execution return information:
+  if (!$content) {
+      // error occured.
+      $content = "Sorry, do not manage to get the following file: $error\n";
   }
+  
+  // now return final content:
+  return $content;
 }
 
 WP_Github_Code_Viewer::init();
