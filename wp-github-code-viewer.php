@@ -72,10 +72,10 @@ function curl_file_get_contents($url) {
   
   // configure options:        
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch,CURLOPT_RETURNTRANSFER,TRUE);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HEADER, false);    
-  curl_setopt($ch, CURLOPT_SSLVERSION,3);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);
+  curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   
   $header = array(
       'Connection: keep-alive',
